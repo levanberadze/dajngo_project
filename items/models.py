@@ -12,12 +12,12 @@ class Item(BaseModel):
     height = models.PositiveIntegerField(null=True)
     width = models.PositiveIntegerField(null=True)
     weight = models.PositiveIntegerField(null=True)
-    barcode = models.CharField(max_length=11, unique=True, editable=False)
+    barcode = models.CharField(max_length=13, unique=True, editable=False)
     expiration_date = models.DateField()
     category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='items')
 
     def generate_barcode(self):
-        return ''.join(random.choices(string.digits, k=11))
+        return ''.join(random.choices(string.digits, k=13))
 
     def save(self, *args, **kwargs):
         self.barcode = self.generate_barcode()
@@ -25,6 +25,7 @@ class Item(BaseModel):
 
     def __str__(self):
         return self.name
+
 
 class Category(BaseModel):
     name = models.CharField(max_length=200)

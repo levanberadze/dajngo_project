@@ -19,5 +19,5 @@ class CategoryItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
 
     def get_queryset(self):
-        return super().get_queryset().filter(category_id = self.kwargs['category_id'])
+        return super().get_queryset().filter(category_id=self.kwargs['category_id'])
 
