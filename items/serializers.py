@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Item, Category
-
+from datetime import date
 
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,26 +25,27 @@ class ItemSerializer(serializers.ModelSerializer):
         return value
 
     def validate_width(self, value):
-        if value < 0: raise serializers.ValidationError('can`t be negative')
+        if value and value < 0: raise serializers.ValidationError('can`t be negative')
         return value
 
     def validate_height(self, value):
-        if value < 0: raise serializers.ValidationError('can`t be negative')
-        return value
-
-    def validate_length(self, value):
-        if value < 0: raise serializers.ValidationError('can`t be negative')
+        if value and value < 0: raise serializers.ValidationError('can`t be negative')
         return value
 
     def validate_weight(self, value):
-        if value < 0: raise serializers.ValidationError('can`t be negative')
+        if value and value< 0: raise serializers.ValidationError('can`t be negative')
         return value
 
     def validate_expiration_date(self, value):
-        if self.initial_data.get('category') and ('food' in self.initial_data('category') or 'drink' in self.initial_data('category')):
-            if value is None:
-                raise serializers.ValidationError('expiration_date is required for food and drink categories')
+        if value < date.today(): raise serializers.ValidationError('expiration_date should not be from past')
         return value
+
+    def validate(self, data):
+        category = data.get('category')
+        expiration_date = data.get('expiration_date')
+        if category.name.lower() in ('food', 'drink') and not expiration_date:
+            raise serializers.ValidationError('expiration_Date necessary for food and drinks')
+        return data
 
 
 class CategorySerializer(serializers.ModelSerializer):
