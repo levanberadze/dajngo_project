@@ -2,8 +2,8 @@ from django.db import models
 from core.models import BaseModel
 from items.models import Item
 
-def generate_order_name():
 
+def generate_order_name():
     last_order = PurchaseOrder.objects.order_by('-id').first()
     if last_order:
         return f'P0000{last_order.id + 1}'
